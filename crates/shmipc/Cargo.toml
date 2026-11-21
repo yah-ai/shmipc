@@ -1,0 +1,33 @@
+[package]
+name = "yah-shmipc"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Position-independent shared-memory IPC: sealed regions, futex wake, last-value slot arena, and JACK-style cycle participation across a process boundary"
+readme = "README.md"
+keywords = ["ipc", "shared-memory", "audio", "realtime", "memfd"]
+categories = ["os::unix-apis", "concurrency", "multimedia::audio"]
+
+# Position-independent shared-memory IPC primitives. Deliberately domain-free:
+# no koda, no vivarium, no IPAuRo. noisetable's koda binding (`koda-shm`) and
+# its cycle guest consume it; IPAuRo's cycle owner consumes the same
+# region/wake/cycle types without either.
+
+# Published as `yah-shmipc` because `shmipc` on crates.io is an unrelated crate;
+# the library keeps its name, so consumers write
+# `shmipc = { package = "yah-shmipc", version = "0.9" }` and change no `.rs`
+# (the yah-cloud precedent).
+[lib]
+name = "shmipc"
+
+[dependencies]
+libc = "0.2"
+
+# Far side of the cycle boundary for tests/cross_process_cycle.rs. A test cannot
+# fork itself and remain a test, and a thread is not a process — measuring what
+# the boundary costs needs a real one.
+[[bin]]
+name = "shmipc-cycle-peer"
+path = "src/bin/cycle-peer.rs"

@@ -1,0 +1,26 @@
+# shmipc is its own Cargo workspace — promoted out of noisetable's
+# crates/lib/shmipc (ipauro R011-F3, operator ruling F025/F026, 2026-11-16) so
+# that GPL IPAuRo can be the cycle OWNER while noisetable stays the cycle GUEST,
+# both speaking one implementation of the region / wake / cycle layout. Kept as
+# an independent workspace (not a yah root-workspace member), like mshr, so it
+# builds standalone and publishes to crates.io; consumers resolve it from there.
+[workspace]
+members = ["crates/shmipc"]
+resolver = "2"
+
+[workspace.package]
+version = "0.9.0"
+edition = "2024"
+authors = ["yah Dev <human@yah.dev>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/yah-ai/shmipc"
+
+# --- profiles: keep in lockstep with the yah monorepo root Cargo.toml (see
+# oss/mshr/Cargo.toml for why a separate workspace needs its own copy) ---
+[profile.dev]
+debug = "line-tables-only"
+
+[profile.dev.package."*"]
+debug = false
+opt-level = 1
+incremental = false
